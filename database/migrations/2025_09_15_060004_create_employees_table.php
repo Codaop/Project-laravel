@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('nama lengkap', 100);
+            $table->string('nama_lengkap', 100);
             $table->string('email', 100);
-            $table->string('nomor telepon', 100);
+            $table->string('nomor_telepon', 100);
             $table->date('tanggal_lahir');
             $table->text('alamat');
             $table->date('tanggal_masuk');
