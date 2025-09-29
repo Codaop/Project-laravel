@@ -1,38 +1,51 @@
-<div class="container mt-5">
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Form Input Pegawai</title>
+</head>
+
+<body>
     <h1 class="mb-4">Form Pegawai</h1>
     <form action="{{ route('employees.store') }}" method="POST">
         @csrf
-        <div>
-            <label>Nama Lengkap</label>
-            <input type="text" name="nama_lengkap">
-        </div>
-        <div>
-            <label>Email</label>
-            <input type="email" name="email">
-        </div>
-        <div>
-            <label>Nomor Telepon</label>
-            <input type="text" name="nomor_telepon">
-        </div>
-        <div>
-            <label>Tanggal Lahir</label>
-            <input type="date" name="tanggal_lahir">
-        </div>
-        <div>
-            <label>Alamat</label>
-            <textarea name="alamat"></textarea>
-        </div>
-        <div>
-            <label>Tanggal Masuk</label>
-            <input type="date" name="tanggal_masuk">
-        </div>
-        <div>
-            <label>Status</label>
-            <select name="status">
-                <option value="aktif">Aktif</option>
-                <option value="non-aktif">Non-Aktif</option>
-            </select>
-        </div>
-        <button type="submit">Simpan</button>
+        <table>
+            <tr>
+                <td><label for="nama_lengkap">Nama Lengkap:</label></td>
+                <td><input type="text" id="nama_lengkap" name="nama_lengkap"></td>
+            </tr>
+            <tr>
+                <td><label for="email">Email:</label></td>
+                <td><input type="email" id="email" name="email"></td>
+            </tr>
+            <tr>
+                <td><label for="nomor_telepon">Nomor Telepon:</label></td>
+                <td><input type="text" id="nomor_telepon" name="nomor_telepon"></td>
+            </tr>
+            <tr>
+                <td><label for="tanggal_lahir">Tanggal Lahir:</label></td>
+                <td><input type="date" id="tanggal_lahir" name="tanggal_lahir"></td>
+            </tr>
+            <tr>
+                <td><label for="alamat">Alamat:</label></td>
+                <td><textarea id="alamat" name="alamat"></textarea></td>
+            </tr>
+            <tr>
+                <td><label for="tanggal_masuk">Tanggal Masuk:</label></td>
+                <td><input type="date" id="tanggal_masuk" name="tanggal_masuk"></td>
+            </tr>
+            <tr>
+                <td><label for="status">Status:</label></td>
+                <td> <select id="status" name="status">
+                        <option value="aktif">Aktif</option>
+                        <option value="nonaktif">Nonaktif</option>
+                    </select> </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:right;"> <button type="submit">Simpan</button> </td>
+            </tr>
+        </table>
     </form>
-</div>
+</body>
+
+</html>
