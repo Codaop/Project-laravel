@@ -22,7 +22,6 @@ class AttendanceController extends Controller
      */
     public function create()
     {
-
         return view('attendances.create');
     }
 

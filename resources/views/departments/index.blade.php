@@ -44,6 +44,7 @@
                                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                         </svg>
                                     </a>
+                                    @if (Auth::user()->type == 1)
                                     <a href="{{ route('departments.edit', $d->id) }}"
                                         class="p-2 rounded-lg text-sm backdrop-blur-sm bg-white/15 border border-white/20 text-gray-100 hover:bg-white/25 transition duration-200 ease-in-out">
                                         <span class="sr-only">Edit</span>
@@ -67,6 +68,7 @@
                                             </svg>
                                         </button>
                                     </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -74,10 +76,12 @@
                 </tbody>
             </table>
         </div>
+        @if (Auth::user()->type == 1)
         <div class="flex flex-row justify-center gap-2">
             <a href="{{ route('departments.create') }}"
-                class="px-3 py-2 transition duration-200 ease-in-out transform hover:scale-110 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold rounded-lg shadow-md hover:shadow-xl">Create</a>
+            class="px-3 py-2 transition duration-200 ease-in-out transform hover:scale-110 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold rounded-lg shadow-md hover:shadow-xl">Create</a>
         </div>
+        @endif
     @endsection
 </body>
 
