@@ -13,5 +13,6 @@ class Attendance extends Model
         'waktu_masuk',
         'waktu_keluar',
         'status_absensi',
+        'keterangan_izin'
     ];
 }

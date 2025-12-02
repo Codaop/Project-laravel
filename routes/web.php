@@ -81,4 +81,5 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('salaries', SalariesController::class);
     Route::resource('departments', DepartmentController::class);
     Route::resource('positions', PositionController::class);
+    Route::post('/absen/process', [AttendanceController::class, 'absenOnce'])->name('absenOnce');
 });

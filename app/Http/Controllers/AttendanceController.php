@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends Controller
 {
@@ -14,6 +16,7 @@ class AttendanceController extends Controller
     public function index()
     {
         $attendance = Attendance::latest()->paginate(5);
+
         return view('attendances.index', compact('attendance'));
     }
 
@@ -30,15 +33,61 @@ class AttendanceController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'karyawan_id' => 'required|exists:employees,id',
+        $karyawanId = Auth::user()->employee->id;
+        $validated = $request->validate([
             'tanggal' => 'required|date',
-            'waktu_masuk' => 'required|date_format:H:i',
-            'waktu_keluar' => 'required|date_format:H:i',
             'status_absensi' => 'required|in:hadir,izin,sakit,alpha',
+            'keterangan_izin' => 'required|string|max:500',
         ]);
-        Attendance::create($request->all());
-        return redirect()->route('attendances.index');
+
+        $finalWaktuMasuk = null;
+        $finalWaktuKeluar = null;
+
+        $dataToStored = array_merge($validated, [
+            'karyawan_id' => $karyawanId,
+            'waktu_masuk' => $finalWaktuMasuk,
+            'waktu_keluar' => $finalWaktuKeluar,
+        ]);
+
+        Attendance::create($dataToStored);
+
+        return redirect()->route('attendances.index')->with('success', 'Pengajuan izin berhasil disimpan.');
+    }
+
+    public function absenOnce()
+    {
+        $user = Auth::user();
+        $today = Carbon::today()->toDateString();
+        $karyawanId = $user->employee->id;
+
+        $attendance = Attendance::where('karyawan_id', $karyawanId)->whereDate('tanggal', $today)->first();
+
+        if (! $attendance) {
+            Attendance::create([
+                'karyawan_id' => $karyawanId,
+                'tanggal' => $today,
+                'waktu_masuk' => Carbon::now()->toTimeString(),
+                'waktu_keluar' => null,
+                'status_absensi' => 'hadir',
+            ]);
+
+            $message = 'Anda berhasil absen masuk untuk hari ini.';
+
+        } elseif ($attendance->waktu_keluar == null) {
+            if (Carbon::parse($attendance->waktu_masuk)->greaterThan(Carbon::now())) {
+                return back()->with('error', 'Waktu keluar tidak valid (kurang dari waktu masuk).');
+            }
+
+            $attendance->update([
+                'waktu_keluar' => Carbon::now()->toTimeString(),
+            ]);
+
+            $message = 'Anda berhasil absen keluar. Anda dapat melakukan absen lagi esok hari.';
+        } else {
+            $message = 'Anda sudah menyelesaikan absen masuk dan keluar hari ini.';
+        }
+
+        return redirect()->route('attendances.index')->with('success', $message);
     }
 
     /**
@@ -48,6 +97,7 @@ class AttendanceController extends Controller
     {
         $attendance = Attendance::find($id);
         $nama_emp = Employee::where('id', $attendance->karyawan_id)->value('nama_lengkap');
+
         return view('attendances.show', compact('attendance', 'nama_emp'));
     }
 
@@ -57,6 +107,7 @@ class AttendanceController extends Controller
     public function edit(string $id)
     {
         $attendance = Attendance::find($id);
+
         return view('attendances.edit', compact('attendance'));
     }
 
@@ -80,6 +131,7 @@ class AttendanceController extends Controller
             'waktu_keluar',
             'status_absensi',
         ]));
+
         return redirect()->route('attendances.index');
     }
 
@@ -90,6 +142,7 @@ class AttendanceController extends Controller
     {
         $attendance = Attendance::find($id);
         $attendance->delete();
+
         return redirect()->route('attendances.index');
     }
 }

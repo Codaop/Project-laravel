@@ -23,6 +23,7 @@
                         <th class="p-2">Waktu Masuk</th>
                         <th class="p-2">Waktu Keluar</th>
                         <th class="p-2">Status Absen</th>
+                        <th class="p-2">Keterangan</th>
                         <th class="p-2">Aksi</th>
                     </tr>
                 </thead>
@@ -32,9 +33,10 @@
                             <td class="p-2">{{ $loop->iteration }}</td>
                             <td class="p-2">{{ $attendances->karyawan_id }}</td>
                             <td class="p-2">{{ $attendances->tanggal }}</td>
-                            <td class="p-2">{{ $attendances->waktu_masuk }}</td>
-                            <td class="p-2">{{ $attendances->waktu_keluar }}</td>
-                            <td class="p-2">{{ ucfirst($attendances->status_absensi) }}</td>
+                            <td class="p-2">{{ is_null($attendances->waktu_masuk) ? '-' : $attendances->waktu_masuk }}</td>
+                            <td class="p-2">{{ is_null($attendances->waktu_keluar) ? '-' : $attendances->waktu_keluar }}</td>
+                            <td class="p-2 font-medium {{ $attendances->status_absensi == 'hadir' ? 'text-emerald-400' : 'text-orange-400' }}">{{ ucfirst($attendances->status_absensi)}}</td>
+                            <td class="p-2">{{ is_null($attendances->keterangan_izin) ? '-' : $attendances->keterangan_izin}}</td>
                             <td class="p-2">
                                 <div class="flex items-center justify-center space-x-2">
                                     <a href="{{ route('attendances.show', $attendances->id) }}"
@@ -81,16 +83,36 @@
                 </tbody>
             </table>
         </div>
+        {{-- Alert absensi --}}
+        @if (session('success'))
+            <div class="alert alert-success" role="alert"
+                style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger" role="alert"
+                style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px;">
+                {{ session('error') }}
+            </div>
+        @endif
+        {{-- End Alert --}}
         <div class="flex flex-row gap-4 justify-center">
+            @if (Auth::user()->type == 0)
             <div class="flex flex-row justify-center gap-2">
-                <a href="{{ route('attendances.create') }}"
-                    class="px-3 py-2 transition duration-200 ease-in-out transform hover:scale-110 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold rounded-lg shadow-md hover:shadow-xl">Absen</a>
+                <form action="{{ route('absenOnce') }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                        class="px-3 py-2 transition duration-200 ease-in-out transform hover:scale-110 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold rounded-lg shadow-md hover:shadow-xl">Absen</button>
+                </form>
             </div>
             <div class="flex flex-row justify-center gap-2">
                 <a href="{{ route('attendances.create') }}"
-                    class="px-3 py-2 transition duration-200 ease-in-out transform hover:scale-110 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold rounded-lg shadow-md hover:shadow-xl">Pengajuan
-                    Izin</a>
+                class="px-3 py-2 transition duration-200 ease-in-out transform hover:scale-110 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold rounded-lg shadow-md hover:shadow-xl">Pengajuan
+                Izin</a>
             </div>
+            @endif
         </div>
     @endsection
 </body>
