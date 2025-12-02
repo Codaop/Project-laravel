@@ -3,10 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\KirimLinkResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Notifications\KirimLinkResetPassword;
 
 class User extends Authenticatable
 {
@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'type'
+        'type',
     ];
 
     /**
@@ -51,5 +51,10 @@ class User extends Authenticatable
     {
         // 2. GUNAKAN NOTIFIKASI KUSTOM ANDA DI SINI
         $this->notify(new KirimLinkResetPassword($token));
+    }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'user_id', 'id');
     }
 }

@@ -21,8 +21,10 @@
                         class="hover:bg-fuchsia-600 hover:text-white hover:rounded-md hover:shadow-md p-2 transition duration-250 ease-in-out rounded-md">Attendance</a>
                     <a href="{{ url('/departments') }}"
                         class="hover:bg-fuchsia-600 hover:text-white hover:rounded-md hover:shadow-md p-2 transition duration-250 ease-in-out rounded-md">Department</a>
-                    <a href="{{ url('/salaries') }}"
-                        class="hover:bg-fuchsia-600 hover:text-white hover:rounded-md hover:shadow-md p-2 transition duration-250 ease-in-out rounded-md">Salary</a>
+                    @if(Auth::user()->type == 1)
+                        <a href="{{ url('/salaries') }}"
+                            class="hover:bg-fuchsia-600 hover:text-white hover:rounded-md hover:shadow-md p-2 transition duration-250 ease-in-out rounded-md">Salary</a>
+                    @endif
                     <a href="{{ url('/positions') }}"
                         class="hover:bg-fuchsia-600 hover:text-white hover:rounded-md hover:shadow-md p-2 transition duration-250 ease-in-out rounded-md">Position</a>
                     <a href="{{ url('/logout') }}"
